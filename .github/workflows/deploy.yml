@@ -3,7 +3,7 @@ name: Deploy to Cloudflare Pages
 on:
   repository_dispatch:
     types: [on-demand-release]
-  pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
