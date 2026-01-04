@@ -24,6 +24,22 @@ jobs:
           repository: seiry/astro-blog
           token: ${{ secrets.GH_TOKEN_FOR_CHECKOUT }}
 
+      - name: Cache dependencies & Astro build cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.npm
+            ~/.cache/yarn
+            ~/.yarn/cache
+            ~/.pnpm-store
+            ~/.bun/install/cache
+            ~/.cache/bun
+            .astro
+            node_modules/.cache
+          key: ${{ runner.os }}-astro-${{ hashFiles('**/pnpm-lock.yaml', '**/package-lock.json', '**/npm-shrinkwrap.json', '**/yarn.lock', '**/bun.lockb', '**/bun.lock', '**/deno.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-astro-
+
       - name: Install, build, and upload your site output
         uses: withastro/action@v5
         # with:
