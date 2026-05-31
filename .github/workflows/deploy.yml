@@ -1,4 +1,4 @@
-name: Deploy to Cloudflare Pages
+name: Deploy to Cloudflare Workers
 
 on:
   repository_dispatch:
@@ -45,10 +45,13 @@ jobs:
         # with:
           # package-manager: bun
           
-      - name: Publish to Cloudflare Pages
+      - name: Publish to Cloudflare Workers
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy dist
+          # Reads wrangler.jsonc from the checked-out astro-blog repo
+          # (assets.directory = ./dist) and deploys a static-assets Worker.
+          command: deploy
           gitHubToken: ${{ secrets.GITHUB_TOKEN }} 
+
