@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  pages: write
   id-token: write
   deployments: write
   pull-requests: write
@@ -40,10 +39,20 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-astro-
 
-      - name: Install, build, and upload your site output
-        uses: withastro/action@v6
-        # with:
-          # package-manager: bun
+      # Build Astro directly instead of withastro/action, which always uploads
+      # a GitHub Pages artifact we don't need for a Workers deploy.
+      - name: Setup pnpm (version pinned via package.json "packageManager")
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Install dependencies & build site
+        run: |
+          pnpm install
+          pnpm run build
           
       - name: Publish to Cloudflare Workers
         uses: cloudflare/wrangler-action@v4
